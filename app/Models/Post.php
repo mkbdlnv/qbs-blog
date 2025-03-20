@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Notifications\NewPostNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -23,6 +24,13 @@ class Post extends Model
                 $post->slug = Str::slug($post->title);
             }
         });
+
+        static::created(function ($post) {
+            $subscribers = Subscriber::all();
+            foreach ($subscribers as $subscriber) {
+                $subscriber->notify(new NewPostNotification($post));
+            }
+        });
     }
 
     public function likes()
@@ -40,5 +48,6 @@ class Post extends Model
     {
         return $this->likes()->where('user_id', $userId)->exists();
     }
+
 
 }

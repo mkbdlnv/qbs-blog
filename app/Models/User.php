@@ -55,4 +55,9 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
     {
         return $this->isAdmin();
     }
+
+    public function isSubscribed()
+    {
+        return Subscriber::where('email', $this->email)->exists();
+    }
 }

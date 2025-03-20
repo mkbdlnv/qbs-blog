@@ -18,8 +18,11 @@
         rel="stylesheet" type="text/css"/>
     <!-- Core theme CSS (includes Bootstrap)-->
     <link href="{{asset('css/style.css')}}" rel="stylesheet"/>
+    <link href="{{asset('css/toggleButton.css')}}" rel="stylesheet"/>
     <script src="{{asset('js/script.js')}}"></script>
     <script src="https://kit.fontawesome.com/19a4289b4a.js" crossorigin="anonymous"></script>
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+
 </head>
 <style>
     .navbar{
@@ -93,6 +96,14 @@
 @endif
 <div class="container-fluid d-flex justify-content-center align-items-center vh-100">
     <div class="row bg-white rounded p-4 shadow" style="width: 60%;">
+        <div>
+            <label class="switch">
+                <input type="checkbox" id="subscription-toggle"
+                    {{ auth()->user()->isSubscribed() ? 'checked' : '' }} onclick="toggleNotification()">
+                <span class="slider round"></span>
+            </label>
+            <span>Уведомления</span>
+        </div>
         <div class="col-md-6 border-right">
             <div class="d-flex flex-column align-items-center text-center p-3 py-5">
                 <img class="rounded-circle mt-3" width="150px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg">
@@ -158,6 +169,25 @@
                 console.error("Ошибка при отправке запроса:", error);
                 alert("Ошибка при обновлении профиля.");
             });
+    }
+
+    function toggleNotification(){
+        let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        fetch('/toggle-subscription', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({})
+        })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+            }).catch(error => {
+            console.error("Ошибка при отправке запроса:", error);
+            alert("Ошибка при подписке на уведомелния");
+        });
     }
 </script>
 
