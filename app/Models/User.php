@@ -21,7 +21,7 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
      *
      * @var list<string>
      */
-    protected $fillable = ['name', 'email', 'password', 'role'];
+    protected $fillable = ['name', 'email', 'password', 'role', 'old_email_verification_token', 'new_email_verification_token', 'new_email'];
 
     public function isAdmin() : bool
     {

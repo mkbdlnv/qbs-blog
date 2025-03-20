@@ -27,4 +27,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/comments/{id}/like', [CommentLikeController::class, 'toggleLike'])->name('comments.toggleLike');
 
     Route::put('/users', [UserController::class, 'update'])->name('user.update');
+    Route::get('/users/confirm-old-email/{token}', [UserController::class, 'confirmOldEmail'])->name('verify.old.email');
+    Route::get('/users/confirm-new-email/{token}', [UserController::class, 'confirmNewEmail'])->name('verify.new.email');
 });

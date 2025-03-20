@@ -119,7 +119,10 @@
         </div>
     </div>
 </div>
-
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Core theme JS-->
+<script src="js/scripts.js"></script>
 <script>
     function edit() {
         if (!confirm("Вы уверены, что хотите сохранить изменения?")) return;
@@ -144,9 +147,10 @@
         })
             .then(response => response.json())
             .then(data => {
-                if (data.success) {
-                    alert("Изменения сохранены!");
-                } else {
+                if (data.success === true) {
+                    alert(data.message);
+                }
+                else {
                     alert("Ошибка: " + (data.message || "Не удалось сохранить изменения."));
                 }
             })
