@@ -26,32 +26,45 @@ class CommentResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-left';
 
-//    public static function form(Form $form): Form
-//    {
-//        return $form->schema([
-//            Select::make('user_id')
-//                ->label('Автор')
-//                ->relationship('user', 'name')
-//                ->searchable()
-//                ->required(),
-//
-//            Select::make('post_id')
-//                ->label('Пост')
-//                ->relationship('post', 'title')
-//                ->searchable()
-//                ->required(),
-//
-//            TextInput::make('content')
-//                ->label('Комментарий')
-//                ->required()
-//                ->maxLength(1000),
-//
-//            DateTimePicker::make('created_at')
-//                ->label('Дата создания')
-//                ->disabled()
-//                ->default(now()),
-//        ]);
-//    }
+    public static function form(Form $form): Form
+    {
+        return $form->schema([
+            Select::make('user_id')
+                ->label('Автор')
+                ->relationship('user', 'name')
+                ->searchable()
+                ->required(),
+
+            Select::make('post_id')
+                ->label('Пост')
+                ->relationship('post', 'title')
+                ->searchable()
+                ->required(),
+
+            TextInput::make('content')
+                ->label('Комментарий')
+                ->required()
+                ->maxLength(1000),
+
+            DateTimePicker::make('created_at')
+                ->label('Дата создания')
+                ->disabled()
+                ->default(now()),
+        ]);
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $user = auth()->user();
+
+        // Если админ — показываем все
+        if ($user->isAdmin()) {
+            return parent::getEloquentQuery();
+        }
+
+        // Иначе — только свои комментарии
+        return parent::getEloquentQuery()->where('user_id', $user->id);
+    }
 
     public static function table(Table $table): Table
     {
@@ -88,7 +101,7 @@ class CommentResource extends Resource
             ])
             ->actions([
                 DeleteAction::make(),
-
+                EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
