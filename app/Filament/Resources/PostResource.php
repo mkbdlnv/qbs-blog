@@ -7,6 +7,7 @@ use App\Filament\Resources\PostResource\RelationManagers;
 use App\Models\Post;
 use Filament\Forms;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
@@ -31,6 +32,11 @@ class PostResource extends Resource
             TextInput::make('title')->required(),
             TextInput::make('slug')->unique()->required(),
             Textarea::make('content')->required(),
+            Select::make('tags')
+                ->label('Теги')
+                ->multiple()
+                ->relationship('tags', 'name')
+                ->preload(),
         ]);
     }
 
@@ -53,6 +59,10 @@ class PostResource extends Resource
                     ->sortable()
                     ->searchable()
                     ->dateTime(),
+                TextColumn::make('tags.name')
+                    ->label('Теги')
+                    ->badge()
+                    ->separator(', '),
             ])
             ->filters([
                 Filter::make('created_at')
@@ -81,7 +91,7 @@ class PostResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+
         ];
     }
 

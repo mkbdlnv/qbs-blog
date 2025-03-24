@@ -5,6 +5,8 @@ namespace App\Models;
 use App\Notifications\NewPostNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class Post extends Model
@@ -47,6 +49,11 @@ class Post extends Model
     public function isLikedByUser($userId)
     {
         return $this->likes()->where('user_id', $userId)->exists();
+    }
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class);
     }
 
 

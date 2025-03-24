@@ -23,7 +23,7 @@ class CommentController extends Controller
             'content' => $request->input('content'),
         ]);
 
-        return back()->with('success', 'Комментарий добавлен!');
+        return response()->json(['success' => true, 'message' => 'Комментарий написан.']);
     }
 
     public function destroy($id)
@@ -55,5 +55,29 @@ class CommentController extends Controller
         $comment->update(['content' => $validated['content']]);
 
         return response()->json(['success' => true, 'message' => 'Комментарий отредактирован.']);
+    }
+
+    public function getComments($postId)
+    {
+        $comments = Comment::where('post_id', $postId)
+            ->with(['user', 'likes'])
+            ->latest()
+            ->get()
+            ->map(function ($comment) {
+                return [
+                    'id' => $comment->id,
+                    'content' => $comment->content,
+                    'user_name' => $comment->user->name,
+                    'created_at' => $comment->created_at->diffForHumans(),
+                    'updated_at' => $comment->updated_at->diffForHumans(),
+                    'edited' => $comment->created_at != $comment->updated_at,
+                    'is_authenticated' => Auth::check(),
+                    'is_liked' => Auth::check() ? $comment->isLikedByUser(Auth::id()) : false,
+                    'likes_count' => $comment->likes->count(),
+                    'can_edit' => Auth::check() && (Auth::id() === $comment->user_id || Auth::user()->role === 'admin'),
+                ];
+            });
+
+        return response()->json($comments);
     }
 }
