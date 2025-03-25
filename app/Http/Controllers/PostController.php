@@ -25,7 +25,7 @@ class PostController extends Controller
                     });
                 }
             })
-            ->with(['likes', 'comments', 'comments.user', 'tags']) // Eager load relationships
+            ->with(['likes', 'comments', 'comments.user', 'tags'])
             ->latest()
             ->paginate($perPage);
 
@@ -35,6 +35,7 @@ class PostController extends Controller
                 'id' => $post->id,
                 'title' => $post->title,
                 'content' => $post->content,
+                'image' => $post->image,
                 'created_at' => $post->created_at->diffForHumans(),
                 'is_authenticated' => Auth::check(),
                 'is_liked' => Auth::check() ? $post->isLikedByUser(Auth::id()) : false,

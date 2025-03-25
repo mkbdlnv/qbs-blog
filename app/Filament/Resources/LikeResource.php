@@ -7,10 +7,13 @@ use App\Models\Like;
 use Filament\Forms;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Filters\Filter;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\TextColumn;
+use Illuminate\Database\Eloquent\Builder;
 
 class LikeResource extends Resource
 {
@@ -38,6 +41,19 @@ class LikeResource extends Resource
                     ->searchable()
                     ->required(),
             ]);
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $user = auth()->user();
+
+        // Если админ — показываем все
+        if ($user->isAdmin()) {
+            return parent::getEloquentQuery();
+        }
+
+        // Иначе — только свои комментарии
+        return parent::getEloquentQuery()->where('user_id', $user->id);
     }
 
     public static function table(Tables\Table $table): Tables\Table
@@ -75,7 +91,13 @@ class LikeResource extends Resource
                     }),
             ])
             ->defaultSort('created_at', 'desc')
-            ->paginated(10);
+            ->paginated(10)
+            ->actions([
+                DeleteAction::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\DeleteBulkAction::make(),
+            ]);
     }
 
     public static function getRelations(): array

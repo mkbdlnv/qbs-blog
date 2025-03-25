@@ -396,6 +396,7 @@
                         <div>
                             <h2 class="post-title">${post.title}</h2>
                             ${tagsHtml}
+                            <img src="/storage/${post.image}" class="img-fluid"   alt="">
                             <p class="post-subtitle">${post.content}</p>
                         </div>
                         <p class="fst-italic">Posted ${post.created_at}</p>

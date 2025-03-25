@@ -26,6 +26,10 @@ class CommentResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-left';
 
+    protected static ?string $navigationLabel = 'Комментарии';
+    protected static ?string $pluralLabel = 'Комментарии';
+    protected static ?string $label = 'Комментарии';
+
     public static function form(Form $form): Form
     {
         return $form->schema([

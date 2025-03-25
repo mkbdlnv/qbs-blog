@@ -2,26 +2,26 @@
 
 namespace App\Policies;
 
-use App\Models\Post;
+use App\Models\Like;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
 
-class PostPolicy
+class LikePolicy
 {
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        return $user->isAdmin();
+        return true;
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Post $post): bool
+    public function view(User $user, Like $like): bool
     {
-        return $user->isAdmin();
+        return $user->isAdmin() || $user->id === $like->user_id;
     }
 
     /**
@@ -29,39 +29,38 @@ class PostPolicy
      */
     public function create(User $user): bool
     {
-        return $user->isAdmin();
+        return false;
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Post $post): bool
+    public function update(User $user, Like $like): bool
     {
-        return $user->isAdmin();
+        return false;
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Post $post): bool
+    public function delete(User $user, Like $like): bool
     {
-        return $user->isAdmin();
+        return $user->id === $like->user_id;
     }
-
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Post $post): bool
+    public function restore(User $user, Like $like): bool
     {
-        return $user->isAdmin();
+        return false;
     }
 
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Post $post): bool
+    public function forceDelete(User $user, Like $like): bool
     {
-        return $user->isAdmin();
+        return false;
     }
 }
