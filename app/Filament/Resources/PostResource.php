@@ -22,6 +22,7 @@ use Filament\Tables\Table;
 use Filament\Tables\Actions\Action;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
+use Mohamedsabil83\FilamentFormsTinyeditor\Components\TinyEditor;
 
 class PostResource extends Resource
 {
@@ -38,7 +39,7 @@ class PostResource extends Resource
         return $form->schema([
             TextInput::make('title')->required(),
             TextInput::make('slug')->unique(ignoreRecord: true),
-            Textarea::make('content')->required(),
+            TinyEditor::make('content')->required(),
             Select::make('tags')
                 ->label('Теги')
                 ->multiple()
