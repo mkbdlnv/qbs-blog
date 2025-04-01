@@ -21,23 +21,35 @@ class LikeResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-hand-thumb-up';
 
-    protected static ?string $navigationLabel = 'Лайки';
-    protected static ?string $pluralLabel = 'Лайки';
-    protected static ?string $label = 'Лайк';
+    public static function getNavigationLabel(): string
+    {
+        return __('admin.likes');
+    }
+
+    public static function getPluralLabel(): string
+    {
+        return __('admin.likes');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.like');
+    }
 
     public static function form(Forms\Form $form): Forms\Form
     {
         return $form
             ->schema([
                 Select::make('user_id')
-                    ->label('Пользователь')
+                    ->label(__('admin.user'))
                     ->relationship('user', 'name')
                     ->searchable()
                     ->required(),
 
                 Select::make('post_id')
-                    ->label('Пост')
+                    ->label(__('admin.post'))
                     ->relationship('post', 'title')
+                    ->getOptionLabelFromRecordUsing(fn ($record) => $record->translated_name)
                     ->searchable()
                     ->required(),
             ]);
@@ -61,17 +73,18 @@ class LikeResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('user.name')
-                    ->label('Пользователь')
+                    ->label(__('admin.user'))
                     ->sortable()
                     ->searchable(),
 
-                TextColumn::make('post.title')
-                    ->label('Пост')
+                TextColumn::make('post_title')
+                    ->label(__('admin.post'))
+                    ->getStateUsing(fn ($record) => $record->post?->translated_title)
                     ->sortable()
                     ->searchable(),
 
                 TextColumn::make('created_at')
-                    ->label('Дата лайка')
+                    ->label(__('admin.created.at'))
                     ->dateTime()
                     ->sortable(),
             ])

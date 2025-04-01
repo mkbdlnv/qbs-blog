@@ -26,32 +26,43 @@ class CommentResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-left';
 
-    protected static ?string $navigationLabel = 'Комментарии';
-    protected static ?string $pluralLabel = 'Комментарии';
-    protected static ?string $label = 'Комментарии';
+    public static function getNavigationLabel(): string
+    {
+        return __('admin.comments');
+    }
 
+    public static function getPluralLabel(): string
+    {
+        return __('admin.comments');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.comment');
+    }
     public static function form(Form $form): Form
     {
         return $form->schema([
             Select::make('user_id')
-                ->label('Автор')
+                ->label(__('admin.author'))
                 ->relationship('user', 'name')
                 ->searchable()
-                ->required(),
+                ->disabled(),
 
             Select::make('post_id')
-                ->label('Пост')
-                ->relationship('post', 'title')
+                ->label(__('admin.post'))
+                ->relationship('post', 'title') // всё равно нужно для связи
+                ->getOptionLabelFromRecordUsing(fn ($record) => $record->translated_title)
                 ->searchable()
-                ->required(),
+                ->disabled(),
 
             TextInput::make('content')
-                ->label('Комментарий')
+                ->label(__('admin.comment'))
                 ->required()
                 ->maxLength(1000),
 
             DateTimePicker::make('created_at')
-                ->label('Дата создания')
+                ->label(__('admin.created.at'))
                 ->disabled()
                 ->default(now()),
         ]);
@@ -76,19 +87,19 @@ class CommentResource extends Resource
             ->columns([
                 TextColumn::make('id')->label('ID')->sortable(),
                 TextColumn::make('user.name')
-                    ->label('Автор')
+                    ->label(__('admin.author'))
                     ->sortable()
                     ->searchable()
                     ->url(fn ($record) => url("/admin/users/{$record->user_id}/edit"))
                     ->openUrlInNewTab(), // Opens in a new tab
                 TextColumn::make('post.title')
-                    ->label('Название поста')
+                    ->label(__('admin.post.name'))
                     ->sortable()
                     ->searchable()
                     ->url(fn ($record) => url("/admin/posts/{$record->post_id}/edit"))
                     ->openUrlInNewTab(), // Opens in a new tab
-                TextColumn::make('content')->label('Комментарий')->limit(50)->searchable(),
-                TextColumn::make('created_at')->label('Дата создания')->dateTime('d.m.Y H:i'),
+                TextColumn::make('content')->label(__('admin.comment'))->limit(50)->searchable(),
+                TextColumn::make('created_at')->label(__('admin.created.at'))->dateTime('d.m.Y H:i'),
             ])
             ->filters([
                 Filter::make('created_at')

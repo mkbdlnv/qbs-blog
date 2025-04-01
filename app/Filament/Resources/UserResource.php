@@ -24,25 +24,38 @@ class UserResource extends Resource
     protected static ?string $model = User::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-user';
-    protected static ?string $navigationLabel = 'Пользователи';
-    protected static ?string $pluralLabel = 'Пользователи';
-    protected static ?string $label = 'Пользователь';
+
+    public static function getNavigationLabel(): string
+    {
+        return __('admin.users');
+    }
+
+    public static function getPluralLabel(): string
+    {
+        return __('admin.users');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.user');
+    }
+
     public static function form(Form $form): Form
     {
         return $form->schema([
             TextInput::make('name')
-                ->label('Имя')
+                ->label(__('admin.user.name'))
                 ->required()
                 ->maxLength(255),
 
-            TextInput::make('email')
+            TextInput::make(__('admin.user.email'))
                 ->label('Email')
                 ->email()
                 ->required()
                 ->unique(ignoreRecord: true), // Уникальный email при редактировании
 
             TextInput::make('password')
-                ->label('Пароль')
+                ->label(__('admin.user.password'))
                 ->password()
                 ->maxLength(255)
                 ->dehydrateStateUsing(fn ($state) => !empty($state) ? bcrypt($state) : null) // Hash only if provided
@@ -53,10 +66,10 @@ class UserResource extends Resource
 
 
             Select::make('role')
-                ->label('Роль')
+                ->label(__('admin.user.role'))
                 ->options([
-                    'admin' => 'Администратор',
-                    'user' => 'Пользователь',
+                    'admin' => 'Admin',
+                    'user' => 'Reader',
                 ])
                 ->required(),
         ]);
@@ -66,11 +79,11 @@ class UserResource extends Resource
     {
         return $table->columns([
             TextColumn::make('id')->label('ID')->sortable(),
-            TextColumn::make('name')->label('Имя')->sortable()->searchable(),
-            TextColumn::make('email')->label('Email')->sortable()->searchable(),
-            TextColumn::make('role')->label('Роль')->sortable()->searchable(), // Добавлено
+            TextColumn::make('name')->label(__('admin.user.name'))->sortable()->searchable(),
+            TextColumn::make('email')->label(__('admin.user.email'))->sortable()->searchable(),
+            TextColumn::make('role')->label(__('admin.user.role'))->sortable()->searchable(), // Добавлено
             TextColumn::make('created_at')
-                ->label('Дата регистрации')
+                ->label(__('admin.user.registered'))
                 ->dateTime('d.m.Y H:i'),
         ])
             ->filters([

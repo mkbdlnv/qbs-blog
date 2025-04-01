@@ -7,7 +7,10 @@ use Filament\Widgets\ChartWidget;
 
 class UsersChart extends ChartWidget
 {
-    protected static ?string $heading = 'Новые пользователи';
+    public function getHeading(): string
+    {
+        return __('admin.users.activity');
+    }
 
     protected static ?int $sort = 1;
 

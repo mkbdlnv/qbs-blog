@@ -15,7 +15,17 @@ class Post extends Model
     use HasFactory, SoftDeletes;
 
 
-    protected $fillable = ['title', 'content', 'slug', 'image'];
+    protected $fillable = ['title', 'content', 'title_en', 'content_en', 'slug', 'image'];
+    protected $appends = ['translated_title', 'translated_content'];
+    public function getTranslatedTitleAttribute()
+    {
+        return app()->getLocale() === 'ru' ? $this->title : ($this->title_en ?: $this->title);
+    }
+
+    public function getTranslatedContentAttribute()
+    {
+        return app()->getLocale() === 'ru' ? $this->content : ($this->content_en ?: $this->content);
+    }
 
 
     protected static function boot()

@@ -29,23 +29,38 @@ class PostResource extends Resource
     protected static ?string $model = Post::class;
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationLabel = 'Посты';
-    protected static ?string $pluralLabel = 'Посты';
-    protected static ?string $label = 'Пост';
+    public static function getNavigationLabel(): string
+    {
+        return __('admin.posts');
+    }
 
+    public static function getPluralLabel(): string
+    {
+        return __('admin.posts');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.post');
+    }
 
     public static function form(Form $form): Form
     {
         return $form->schema([
-            TextInput::make('title')->required(),
-            TextInput::make('slug')->unique(ignoreRecord: true),
-            TinyEditor::make('content')->required(),
+            TextInput::make('title')->label(__('admin.name.ru'))->required(),
+            TextInput::make('title_en')->label(__('admin.name.en'))->required(),
+            TextInput::make('slug')->label(__('admin.slug'))->unique(ignoreRecord: true)->columnSpanFull(),
+            TinyEditor::make('content')->label(__('admin.content.ru'))->required(),
+            TinyEditor::make('content_en')->label(__('admin.content.en'))->required(),
             Select::make('tags')
-                ->label('Теги')
+                ->label(__('admin.tags'))
                 ->multiple()
                 ->relationship('tags', 'name') // Подгружаем теги из БД
+                ->getOptionLabelFromRecordUsing(fn ($record) => $record->translated_name)
+
                 ->preload(),
             FileUpload::make('image')
+                ->label(__('admin.image'))
                 ->image()
                 ->directory('posts')
                 ->nullable(),
@@ -56,10 +71,11 @@ class PostResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('title')->label("Название")->sortable()->searchable(),
+                TextColumn::make('title')->label(__('admin.name.ru'))->sortable()->searchable(),
+                TextColumn::make('title_en')->label(__('admin.name.en'))->sortable()->searchable(),
                 TextColumn::make('slug')->label("Slug")->searchable()->sortable(),
-                TextColumn::make('created_at')->label("Дата публикации")->sortable()->searchable()->dateTime(),
-                TextColumn::make('tags.name')->label('Теги')->badge()->separator(', '),
+                TextColumn::make('created_at')->label(__('admin.created.at'))->sortable()->searchable()->dateTime(),
+                TextColumn::make('tags.translated_name')->label(__('admin.tags'))->badge()->separator(', '),
                 ImageColumn::make('image'),
             ])
             ->filters([

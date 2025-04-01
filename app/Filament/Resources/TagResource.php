@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\TagResource\Pages;
@@ -21,18 +22,35 @@ class TagResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationLabel = 'Теги';
-    protected static ?string $pluralLabel = 'Теги';
-    protected static ?string $label = 'Тег';
+    public static function getNavigationLabel(): string
+    {
+        return __('admin.tags');
+    }
+
+    public static function getPluralLabel(): string
+    {
+        return __('admin.tags');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('admin.tag');
+    }
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 TextInput::make('name')
-                    ->label('Название')
-                    ->unique()
+                    ->label(__('admin.name.ru'))
                     ->required()
+                    ->unique(ignoreRecord: true)
+                    ->maxLength(50),
+
+                TextInput::make('name_en')
+                    ->label(__('admin.name.en'))
+                    ->required()
+                    ->unique(ignoreRecord: true)
                     ->maxLength(50),
             ]);
     }
@@ -43,11 +61,15 @@ class TagResource extends Resource
             ->columns([
                 TextColumn::make('id')->sortable(),
                 TextColumn::make('name')
-                    ->label('Название')
+                    ->label(__('admin.name.ru'))
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('name_en')
+                    ->label(__('admin.name.en'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('created_at')
-                    ->label('Дата создания')
+                    ->label(__('admin.created.at'))
                     ->dateTime(),
             ])
             ->filters([])

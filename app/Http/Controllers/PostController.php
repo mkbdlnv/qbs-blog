@@ -33,14 +33,14 @@ class PostController extends Controller
         $posts->through(function ($post) {
             return [
                 'id' => $post->id,
-                'title' => $post->title,
-                'content' => $post->content,
+                'title' => $post->translated_title,
+                'content' => $post->translated_content,
                 'image' => $post->image,
                 'created_at' => $post->created_at->diffForHumans(),
                 'is_authenticated' => Auth::check(),
                 'is_liked' => Auth::check() ? $post->isLikedByUser(Auth::id()) : false,
                 'likes_count' => $post->likes->count(),
-                'tags' => $post->tags->pluck('name')->toArray() // Ensure tags are returned as an array
+                'tags' => $post->tags->pluck('translated_name')->toArray() // Ensure tags are returned as an array
             ];
         });
 

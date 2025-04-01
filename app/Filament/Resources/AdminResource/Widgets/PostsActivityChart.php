@@ -12,7 +12,11 @@ use Illuminate\Support\Facades\Log;
 
 class PostsActivityChart extends ChartWidget
 {
-    protected static ?string $heading = 'Активность по постам';
+    public function getHeading(): string
+    {
+        return __('admin.posts.activity');
+    }
+
 
     protected static ?int $sort = 2;
 

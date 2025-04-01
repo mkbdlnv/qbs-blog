@@ -34,10 +34,9 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
 
             <ul class="navbar-nav ms-auto py-4 py-lg-0">
-                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="/">Главная</a></li>
-                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="#">О нас</a></li>
-                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="#">Написать пост</a></li>
-                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="#">Контакты</a></li>
+                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="/">@lang('blog.main')</a></li>
+                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="#">@lang('blog.about')</a></li>
+                <li class="nav-item"><a class="nav-link px-lg-3 py-3 py-lg-4" href="#">@lang('blog.contact')</a></li>
             </ul>
             <ul class="navbar-nav ms-auto">
                 <!-- Authentication Links -->
@@ -55,17 +54,26 @@
                     @endif
                 @else
                     <li class="nav-item dropdown">
+                        <button class="btn btn-outline-secondary dropdown-toggle" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            🌐 {{ strtoupper(app()->getLocale()) }}
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
+                            <li><a class="dropdown-item" href="{{ url('/set-locale/en') }}">English</a></li>
+                            <li><a class="dropdown-item" href="{{ url('/set-locale/ru') }}">Русский</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
                         <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                             {{ Auth::user()->name }}
                         </a>
-
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="{{ route('profile') }}">Профиль</a>
+
+                            <a class="dropdown-item" href="{{ route('profile') }}">@lang('blog.profile')</a>
                             <a class="dropdown-item" href="{{ route('logout') }}"
                                onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                {{ __('Выйти') }}
+                                @lang('blog.logout')
                             </a>
 
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
@@ -84,8 +92,8 @@
         <div class="row gx-4 gx-lg-5 justify-content-center">
             <div class="col-md-10 col-lg-8 col-xl-7">
                 <div class="site-heading">
-                    <h1>QBS Blog</h1>
-                    <span class="subheading">напиши свой пост</span>
+                    <h1>@lang('blog.title')</h1>
+                    <span class="subheading">@lang('blog.subtitle')</span>
                 </div>
             </div>
         </div>
@@ -233,7 +241,7 @@
 
                 // Загружаем комментарии
                 if (comments.length === 0) {
-                    commentsContainer.innerHTML += "<p>Нет комментариев.</p>";
+                    commentsContainer.innerHTML += "<p>@lang('blog.no.comments').</p>";
                 } else {
                     comments.forEach(comment => {
                         let commentHtml = `
@@ -256,10 +264,10 @@
                                                 ${comment.can_edit ? `
                                                 <div>
                                                     <button class="btn btn-light btn-sm" onclick="editCommentModal(${comment.id})">
-                                                        <i class="fa-solid fa-pen"></i> Редактировать
+                                                        <i class="fa-solid fa-pen"></i> @lang('blog.edit')
                                                     </button>
                                                     <button class="btn btn-danger btn-sm" onclick="deleteComment(${comment.id})">
-                                                        <i class="fa-solid fa-trash"></i> Удалить
+                                                        <i class="fa-solid fa-trash"></i> @lang('blog.delete')
                                                     </button>
                                                 </div>` : ""}
                                             </div>
@@ -289,8 +297,8 @@
                 let commentForm = `
             <hr>
             <form id="comment-form-${postId}" onsubmit="submitComment(event, ${postId})">
-                <textarea id="comment-content-${postId}" name="content" rows="3" required class="form-control" placeholder="Добавьте комментарий"></textarea>
-                <button type="submit" class="btn btn-primary mt-2">Отправить</button>
+                <textarea id="comment-content-${postId}" name="content" rows="3" required class="form-control" placeholder="@lang('blog.add.comment')"></textarea>
+                <button type="submit" class="btn btn-primary mt-2">@lang('blog.send')</button>
             </form>
             `;
                 commentsContainer.innerHTML += commentForm;
@@ -339,7 +347,7 @@
                 tags.forEach(tag => {
                     let tagButton = document.createElement("button");
                     tagButton.classList.add("btn", "tag-btn");
-                    tagButton.textContent = tag.name;
+                    tagButton.textContent = tag.translated_name;
                     tagButton.setAttribute("data-tag", tag.name);
 
                     tagButton.addEventListener("click", function () {
@@ -384,7 +392,7 @@
                 posts.forEach(post => {
                     let tagsHtml = ""; // Генерация тегов
                     if (post.tags && post.tags.length > 0) {
-                        tagsHtml = '<div class="mt-2"><strong>Теги:</strong> ';
+                        tagsHtml = '<div class="mt-2"><strong>@lang('blog.tags'):</strong> ';
                         post.tags.forEach(tag => {
                             tagsHtml += `<span class="badge bg-secondary mx-1">${tag}</span>`;
                         });
@@ -399,7 +407,7 @@
                             <img src="/storage/${post.image}" class="img-fluid"   alt="">
                             <p class="post-subtitle">${post.content}</p>
                         </div>
-                        <p class="fst-italic">Posted ${post.created_at}</p>
+                        <p class="fst-italic">@lang('blog.posted') ${post.created_at}</p>
 
                         ${post.is_authenticated ? `
                             <button onclick="toggleLike(${post.id})"
@@ -410,9 +418,9 @@
                             <span id="likes-count-${post.id}">${post.likes_count}</span>
                         ` : ""}
 
-                        <h5>Комментарии:</h5>
+                        <h5>@lang('blog.comments'):</h5>
                         <div class="comments" id="comments-${post.id}">
-                            <p>Загрузка комментариев...</p>
+                            <p>@lang('blog.load.comments')...</p>
                         </div>
                     </div>
                     <hr class="my-4"/>`;
@@ -444,7 +452,7 @@
         // Кнопка "Предыдущая"
         paginationHtml += `
         <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
-            <a class="page-link" href="#" onclick="loadPosts('', [], ${currentPage - 1})">Предыдущая</a>
+            <a class="page-link" href="#" onclick="loadPosts('', [], ${currentPage - 1})">@lang('previous')</a>
         </li>`;
 
         // Номера страниц
@@ -458,7 +466,7 @@
         // Кнопка "Следующая"
         paginationHtml += `
         <li class="page-item ${currentPage === lastPage ? 'disabled' : ''}">
-            <a class="page-link" href="#" onclick="loadPosts('', [], ${currentPage + 1})">Следующая</a>
+            <a class="page-link" href="#" onclick="loadPosts('', [], ${currentPage + 1})">@lang('next')</a>
         </li>`;
 
         paginationHtml += `</ul></nav>`;
