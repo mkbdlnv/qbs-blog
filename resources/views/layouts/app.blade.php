@@ -36,7 +36,20 @@
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ms-auto">
                         <!-- Authentication Links -->
-                        @guest
+                        <li class="nav-item dropdown">
+                            <a id="langDropdown" class="nav-link dropdown-toggle" href="#" role="button"
+                               data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                {{ __('langs.' . app()->getLocale()) }}
+                            </a>
+
+                            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="langDropdown">
+                                <a class="dropdown-item" href="{{ route('set-locale', 'kz') }}">Қазақша</a>
+                                <a class="dropdown-item" href="{{ route('set-locale', 'ru') }}">Русский</a>
+                                <a class="dropdown-item" href="{{ route('set-locale', 'en') }}">English</a>
+                            </div>
+                        </li>
+
+                    @guest
                             @if (Route::has('login'))
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>

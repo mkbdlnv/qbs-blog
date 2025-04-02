@@ -49,9 +49,12 @@ class PostResource extends Resource
         return $form->schema([
             TextInput::make('title')->label(__('admin.name.ru'))->required(),
             TextInput::make('title_en')->label(__('admin.name.en'))->required(),
+            TextInput::make('title_kz')->label(__('admin.name.kz'))->required(),
             TextInput::make('slug')->label(__('admin.slug'))->unique(ignoreRecord: true)->columnSpanFull(),
             TinyEditor::make('content')->label(__('admin.content.ru'))->required(),
             TinyEditor::make('content_en')->label(__('admin.content.en'))->required(),
+            TinyEditor::make('content_kz')->label(__('admin.content.kz'))->required(),
+
             Select::make('tags')
                 ->label(__('admin.tags'))
                 ->multiple()
@@ -73,6 +76,7 @@ class PostResource extends Resource
             ->columns([
                 TextColumn::make('title')->label(__('admin.name.ru'))->sortable()->searchable(),
                 TextColumn::make('title_en')->label(__('admin.name.en'))->sortable()->searchable(),
+                TextColumn::make('title_kz')->label(__('admin.name.kz'))->sortable()->searchable(),
                 TextColumn::make('slug')->label("Slug")->searchable()->sortable(),
                 TextColumn::make('created_at')->label(__('admin.created.at'))->sortable()->searchable()->dateTime(),
                 TextColumn::make('tags.translated_name')->label(__('admin.tags'))->badge()->separator(', '),

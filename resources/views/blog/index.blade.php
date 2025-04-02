@@ -60,6 +60,7 @@
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
                             <li><a class="dropdown-item" href="{{ url('/set-locale/en') }}">English</a></li>
                             <li><a class="dropdown-item" href="{{ url('/set-locale/ru') }}">Русский</a></li>
+                            <li><a class="dropdown-item" href="{{ url('/set-locale/kz') }}">Қазақша</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -452,7 +453,7 @@
         // Кнопка "Предыдущая"
         paginationHtml += `
         <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
-            <a class="page-link" href="#" onclick="loadPosts('', [], ${currentPage - 1})">@lang('previous')</a>
+            <a class="page-link" href="#" onclick="loadPosts('', [], ${currentPage - 1})">@lang('blog.previous')</a>
         </li>`;
 
         // Номера страниц
@@ -466,7 +467,7 @@
         // Кнопка "Следующая"
         paginationHtml += `
         <li class="page-item ${currentPage === lastPage ? 'disabled' : ''}">
-            <a class="page-link" href="#" onclick="loadPosts('', [], ${currentPage + 1})">@lang('next')</a>
+            <a class="page-link" href="#" onclick="loadPosts('', [], ${currentPage + 1})">@lang('blog.next')</a>
         </li>`;
 
         paginationHtml += `</ul></nav>`;

@@ -52,6 +52,12 @@ class TagResource extends Resource
                     ->required()
                     ->unique(ignoreRecord: true)
                     ->maxLength(50),
+
+                TextInput::make('name_kz')
+                    ->label(__('admin.name.kz'))
+                    ->required()
+                    ->unique(ignoreRecord: true)
+                    ->maxLength(50),
             ]);
     }
 
@@ -66,6 +72,10 @@ class TagResource extends Resource
                     ->sortable(),
                 TextColumn::make('name_en')
                     ->label(__('admin.name.en'))
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('name_kz')
+                    ->label(__('admin.name.kz'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('created_at')

@@ -20,11 +20,13 @@ return [
 
     'name.ru' => 'Название (RU)',
     'name.en' => 'Название (ЕN)',
+    'name.kz' => 'Название (KZ)',
 
     'created.at' => 'Дата создания',
     'slug' => 'Slug',
     'content.ru' => 'Содержание (RU)',
     'content.en' => 'Содержание (EN)',
+    'content.kz' => 'Содержание (KZ)',
 
     'image' => 'Изображение',
 

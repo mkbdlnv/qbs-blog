@@ -12,13 +12,18 @@ class Tag extends Model
     protected $fillable = [
         'name',        // русское название
         'name_en',     // английское название
+        'name_kz',
     ];
 
     protected $appends = ['translated_name'];
 
     public function getTranslatedNameAttribute()
     {
-        return app()->getLocale() === 'ru' ? $this->name : ($this->name_en ?: $this->name);
+        return match (app()->getLocale()) {
+            'kz' => $this->name_kz ?: $this->name,
+            'en' => $this->name_en ?: $this->name,
+            default => $this->name,
+        };
     }
 
     public function posts()

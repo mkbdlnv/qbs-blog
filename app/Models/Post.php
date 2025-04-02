@@ -15,17 +15,26 @@ class Post extends Model
     use HasFactory, SoftDeletes;
 
 
-    protected $fillable = ['title', 'content', 'title_en', 'content_en', 'slug', 'image'];
+    protected $fillable = ['title', 'content', 'title_en', 'content_en', 'title_kz', 'content_kz', 'slug', 'image'];
     protected $appends = ['translated_title', 'translated_content'];
     public function getTranslatedTitleAttribute()
     {
-        return app()->getLocale() === 'ru' ? $this->title : ($this->title_en ?: $this->title);
+        return match (app()->getLocale()) {
+            'kz' => $this->title_kz ?: $this->title,
+            'en' => $this->title_en ?: $this->title,
+            default => $this->title,
+        };
     }
 
     public function getTranslatedContentAttribute()
     {
-        return app()->getLocale() === 'ru' ? $this->content : ($this->content_en ?: $this->content);
+        return match (app()->getLocale()) {
+            'kz' => $this->content_kz ?: $this->content,
+            'en' => $this->content_en ?: $this->content,
+            default => $this->content,
+        };
     }
+
 
 
     protected static function boot()

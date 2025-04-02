@@ -45,9 +45,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
             return [
                 'id' => $tag->id,
                 'name' => $tag->name,
-                'translated_name' => app()->getLocale() === 'ru'
-                    ? $tag->name
-                    : ($tag->name_en ?: $tag->name),
+                'translated_name' => match (app()->getLocale()) {
+                    'kz' => $tag->name_kz ?: $tag->name,
+                    'en' => $tag->name_en ?: $tag->name,
+                    default => $tag->name, // по умолчанию — русский
+                },
             ];
         });
     });
